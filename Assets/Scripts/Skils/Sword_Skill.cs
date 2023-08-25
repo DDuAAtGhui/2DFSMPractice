@@ -2,8 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//enum으로 구분하게 분류
+public enum SwordType
+{
+    Regular,
+    Bounce,
+    Pierce,
+    Spin
+}
+
 public class Sword_Skill : Skill
 {
+    //Regular 타입으로 설정
+    public SwordType swordType = SwordType.Regular;
+
+    [Header("Bounce Info")]
+    [SerializeField] int amountOfBOunce;
+    [SerializeField] float bounceGravity;
+
+    [Header("Pierce Info")]
+    [SerializeField] int pierceAmount;
+    [SerializeField] float pierceGravity;
+
     [Header("Skill Info")]
     [SerializeField] GameObject swordPrefab;
     [SerializeField] Vector2 launchForce;
@@ -26,7 +46,17 @@ public class Sword_Skill : Skill
         base.Start();
 
         GenerateDots();
+        SetUpGravity();
     }
+
+    private void SetUpGravity()
+    {
+        if (swordType == SwordType.Bounce)
+            swordGravity = bounceGravity;
+        else
+            swordGravity = pierceGravity;
+    }
+
     protected override void Update()
     {
         if (Input.GetKeyUp(KeyCode.Mouse1))
@@ -48,6 +78,14 @@ public class Sword_Skill : Skill
     {
         GameObject newSword = Instantiate(swordPrefab, player.transform.position, transform.rotation);
         Sword_Skill_Controller newSwordScript = newSword.GetComponent<Sword_Skill_Controller>();
+
+        if (swordType == SwordType.Bounce)
+            newSwordScript.SetupBounce(true, amountOfBOunce);
+
+        else if (swordType == SwordType.Pierce)
+            newSwordScript.SetupPierce(pierceAmount);
+
+
 
         newSwordScript.SetupSword(finalDir, swordGravity, player);
 
