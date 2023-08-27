@@ -53,7 +53,7 @@ public class Sword_Skill : Skill
     {
         if (swordType == SwordType.Bounce)
             swordGravity = bounceGravity;
-        else
+        else if (swordType == SwordType.Pierce)
             swordGravity = pierceGravity;
     }
 

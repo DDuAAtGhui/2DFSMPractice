@@ -24,9 +24,9 @@ public class Sword_Skill_Controller : MonoBehaviour
 
     [Header("Bounce Info")]
     [SerializeField] float BounceSpeed = 10f;
-    bool isBouncing = true;
+    bool isBouncing;
     int bounceAmount = 4;
-    public List<Transform> enemyTraget;
+    List<Transform> enemyTraget;
     int targetIndex;
 
 
@@ -53,12 +53,14 @@ public class Sword_Skill_Controller : MonoBehaviour
     {
         isBouncing = _isBouncing;
         bounceAmount = _amountOfBouncing;
+
         enemyTraget = new List<Transform>();
     }
 
     public void SetupPierce(int _pierceAMount)
     {
         pierceAmount = _pierceAMount;
+
     }
 
     //칼 회수
@@ -159,19 +161,20 @@ public class Sword_Skill_Controller : MonoBehaviour
             return;
         }
 
-        anim.SetBool("Rotation", false);
         canRotate = false;
         circleCollider.enabled = false;
+
+
+        //리지드바디 키네마틱 true 해서 물리 효과 안받게
+        rb.isKinematic = true;
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
         //튕겨다니게 할거면 회전 안멈추게해야하니까
         //몬스터 못찾을때도
         if (isBouncing && enemyTraget.Count > 0)
             return;
 
-        //리지드바디 키네마틱 true 해서 물리 효과 안받게
-        rb.isKinematic = true;
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;
-
+        anim.SetBool("Rotation", false);
         transform.parent = collision.transform;
     }
 }
